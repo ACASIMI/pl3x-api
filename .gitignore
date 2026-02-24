@@ -1,0 +1,76 @@
+# ==================== MAVEN ====================
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# ==================== KOTLIN / JAVA ====================
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+replay_pid*
+
+# ==================== INTELLIJ IDEA ====================
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+.idea_modules/
+
+# ==================== OS ====================
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# ==================== CREDENTIALS ====================
+settings.xml
+*.env
+.env
+.env.*
+secrets.*
+
+# ==================== MINECRAFT ====================
+run/
+server/
+test-server/
+plugins/
+*.log
+logs/
+crash-reports/
+world/
+world_nether/
+world_the_end/
+usercache.json
+whitelist.json
+banned-*.json
+ops.json
+server.properties
+eula.txt
+spigot.yml
+bukkit.yml
+paper.yml
+paper-global.yml
+paper-world-defaults.yml
+
+# ==================== MISC ====================
+*.tmp
+*.bak
+*.swp
+*.swo
+.cache/
