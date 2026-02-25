@@ -194,22 +194,48 @@
                 <artifactId>dokka-maven-plugin</artifactId>
                 <version>2.0.0</version>
                 <executions>
+                    <!-- Javadoc JAR for Maven Central -->
                     <execution>
                         <phase>prepare-package</phase>
                         <goals>
                             <goal>javadocJar</goal>
                         </goals>
                     </execution>
+
+                    <!-- HTML documentation for GitHub Pages -->
+                    <execution>
+                        <id>dokka-html</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>dokka</goal>
+                        </goals>
+                        <configuration>
+                            <!-- General Dokka Config -->
+                            <moduleName>Pl3x API</moduleName>
+
+                            <!-- Source Set Config -->
+                            <skipDeprecated>false</skipDeprecated>
+                            <skipEmptyPackages>false</skipEmptyPackages>
+                            <suppressObviousFunctions>true</suppressObviousFunctions>
+                            <failOnWarning>false</failOnWarning>
+
+                            <!-- Visibility Config -->
+                            <documentedVisibilities>
+                                <visibility>PUBLIC</visibility>
+                                <visibility>PROTECTED</visibility>
+                            </documentedVisibilities>
+
+                            <!-- Source Link Config -->
+                            <sourceLinks>
+                                <sourceLink>
+                                    <path>src/main/kotlin</path>
+                                    <url>https://github.com/TheNolle/pl3x-api/tree/main/src/main/kotlin</url>
+                                    <lineSuffix>#L</lineSuffix>
+                                </sourceLink>
+                            </sourceLinks>
+                        </configuration>
+                    </execution>
                 </executions>
-                <configuration>
-                    <dokkaPlugins>
-                        <plugin>
-                            <groupId>org.jetbrains.dokka</groupId>
-                            <artifactId>kotlin-as-java-plugin</artifactId>
-                            <version>2.0.0</version>
-                        </plugin>
-                    </dokkaPlugins>
-                </configuration>
             </plugin>
 
             <!-- Release plugin to automate releases -->
