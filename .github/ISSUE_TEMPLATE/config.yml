@@ -6,7 +6,7 @@ contact_links:
     about: Do not open a public issue for security vulnerabilities. Use a private advisory instead.
 
   - name: Pl3xMap Issues
-    url: https://github.com/BillyGalbreath/Pl3xMap/issues
+    url: https://github.com/granny/Pl3xMap/issues
     about: Issues with Pl3xMap itself should be reported to the Pl3xMap project directly.
 
   - name: Documentation
